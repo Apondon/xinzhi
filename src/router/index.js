@@ -31,6 +31,11 @@ const routes = [
     component: () => import('../views/Word.vue')
   },
   {
+    path: '/wordList',
+    name: 'WordList',
+    component: () => import('../views/WordList.vue')
+  },
+  {
     path: '/menu',
     name: 'Menu',
     component: () => import('../views/Menu.vue')
