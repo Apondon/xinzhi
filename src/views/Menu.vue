@@ -40,7 +40,30 @@ div.menu
             :page-size="10",
             layout="total, sizes, prev, pager, next, jumper",
             :total="400") 
-
+el-dialog(:title="title",v-model="dialogVisible",width="30%",:center="false")
+    el-form(ref="form",:model="form",label-width="80px")
+        el-form-item(label="菜单名称")
+            el-input(v-model="form.name")
+        el-form-item(label="等级")
+            el-radio(v-model="form.level",:label="1") 一级菜单
+            el-radio(v-model="form.level",:label="2") 二级菜单
+        el-form-item(label="父级菜单",v-if="form.level == 2")
+            el-select(v-model="form.group",placeholder="请选择状态")
+                el-option(v-for="item in tableData",:key="item.id",:label="item.name",:value="item.id")
+        el-form-item(label="使用类型")
+            el-select(v-model="form.type",placeholder="请选择状态")
+                el-option(v-for="item in options1",:key="item.value",:label="item.label",:value="item.value")
+        el-form-item(label="菜单路径",v-if="form.level == 2")
+            el-input(v-model="form.path")
+        el-form-item(label="菜单备注")
+            el-input(v-model="form.text")
+        el-form-item(label="菜单状态")
+            el-radio(v-model="form.type",label="1") 正常
+            el-radio(v-model="form.type",label="2") 失效
+    template(#footer)
+        div.dialog-footer
+            el-button(@click="closeHandle") 关闭
+            el-button(type="primary") 提交
 </template>
 
 <script>
@@ -114,6 +137,34 @@ export default {
             ],
             // 分页
             currentPage4:1,
+            // dialog
+            title:'',
+            dialogVisible:false,
+            form:{
+                level:1,
+                id:1,
+                name:'',
+                icon:'',
+                path:'',
+                status:'',
+                type:'',
+                text:'',
+                group:'' 
+            },
+            options1:[
+                {
+                    label:'全部',
+                    value:'0'
+                },
+                {
+                    label:'平台',
+                    value:'1'
+                },
+                {
+                    label:'机构',
+                    value:'2'
+                },
+            ]
         }
     },
     methods:{
@@ -133,7 +184,11 @@ export default {
             }
         },
         addOne(){
-
+            this.title = '添加菜单'
+            this.dialogVisible = true
+        },
+        closeHandle(){
+            this.dialogVisible = false
         },
         editHandle(){
 

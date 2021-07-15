@@ -50,11 +50,11 @@ export default {
             },
             {
               name:'用户管理',
-              url:'/about'
+              url:'/user'
             },
             {
               name:'角色管理',
-              url:'/role'
+              url:'/about'
             },
             {
               name:'知识库',
