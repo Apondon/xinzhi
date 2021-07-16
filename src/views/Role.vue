@@ -28,6 +28,7 @@ div.role
             :page-size="10",
             layout="total, sizes, prev, pager, next, jumper",
             :total="400") 
+            
 el-dialog(:title="title",v-model="dialogVisible",width="30%",:center="false")
     el-form(ref="form",:model="form",label-width="80px")
         el-form-item(label="角色名称")
@@ -161,22 +162,21 @@ export default{
                 label: 'label'
             },
             powerIndex:0,
-
         }
     },
     methods:{
         onSubmit(){
             this.tableData = []
-            this.tableList.map(item => 
-                {
-                    if(item.name == this.formInline.name){
-                        this.tableData.push(item)
-                    }
-                }
-            )
+            for(let i =0 ;i<this.tableList.length;i++) {
+                if(this.tableList[i].name == this.formInline.name)
+                    this.tableData.push(item)
+            }
         },
         resetHandle(){
-            this.tableData = this.tableList
+            this.tableData = []
+            for(let i in this.tableList){
+                this.tableData.push(this.tableList[i]) 
+            }
             this.formInline.name = ''
         },
         addOne(){
@@ -204,10 +204,10 @@ export default{
             this.$nextTick(() => {
                 this.$refs.tree.setCheckedKeys(row.power) 
             })
-
         },
         deleteHandle(index){
-            this.tableData.splice(index,1)
+            let cfm = confirm('确认删除')
+            if(cfm) this.tableData.splice(index,1)
         },
         // dialog
         closeHandle(){
@@ -224,9 +224,7 @@ export default{
                         id:this.tableData.length,
                         name:this.form.name,
                         text:this.form.text,
-                        power:[
-
-                        ]
+                        power:this.returnIds()
                     }
                 )
             }
@@ -248,10 +246,24 @@ export default{
         handleCurrentChange(val){
             console.log(`当前页: ${val}`)
         },
-        
+        returnIds(){
+            let arr = []
+            for(let i = 0;i<this.data.length;i++){
+                arr.push(this.data[i].id)
+                if(this.data[i].children){
+                    for(let j = 0;j<this.data[i].children.length;j++){
+                        arr.push(this.data[i].children[j].id)
+                    }
+                }
+            }
+            return arr
+        }
     },
     mounted(){
-        this.tableData = this.tableList
+        this.tableList.map(item => item.power = this.returnIds())
+        for(let i in this.tableList){
+            this.tableData.push(this.tableList[i]) 
+        }
     }
 }
 
