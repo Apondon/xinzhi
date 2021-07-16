@@ -54,7 +54,7 @@ export default {
             },
             {
               name:'角色管理',
-              url:'/about'
+              url:'/role'
             },
             {
               name:'知识库',
