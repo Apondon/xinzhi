@@ -28,7 +28,7 @@ div.role
             :page-size="10",
             layout="total, sizes, prev, pager, next, jumper",
             :total="400") 
-            
+
 el-dialog(:title="title",v-model="dialogVisible",width="30%",:center="false")
     el-form(ref="form",:model="form",label-width="80px")
         el-form-item(label="角色名称")
@@ -168,8 +168,8 @@ export default{
         onSubmit(){
             this.tableData = []
             for(let i =0 ;i<this.tableList.length;i++) {
-                if(this.tableList[i].name == this.formInline.name)
-                    this.tableData.push(item)
+                if(this.tableList[i].name.includes(this.formInline.name))
+                    this.tableData.push(this.tableList[i])
             }
         },
         resetHandle(){
