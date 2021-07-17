@@ -66,7 +66,7 @@ export default {
             },
             {
               name:'公告资讯',
-              url:'/'
+              url:'/info'
             },
             {
               name:'日志管理',
@@ -75,7 +75,12 @@ export default {
             {
               name:'登录',
               url:'/login'
+            },
+            {
+              name:'主页',
+              url:'/'
             }
+          
           ]
         },
         {
@@ -116,7 +121,7 @@ html,body{
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  // text-align: center;
   color: #2c3e50;
   height: 100%;
 }
