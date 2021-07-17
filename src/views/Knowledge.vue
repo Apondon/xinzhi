@@ -5,10 +5,10 @@ div.knowledge
         el-form-item(label="名称")
             el-input(v-model="formInline.name",placeholder="请输入名称")
         el-form-item(label="问题类型")
-            el-select(v-model="formInline.ques",placeholder="请选择")
+            el-select(v-model="formInline.ques",placeholder="请选择",clearable)
                 el-option(v-for="item in qOptions",:key="item.value",:label="item.label",:value="item.value")
         el-form-item(label="就诊类型")
-            el-select(v-model="formInline.ret",placeholder="请选择")
+            el-select(v-model="formInline.ret",placeholder="请选择",clearable)
                 el-option(v-for="item in rOptions",:key="item.value",:label="item.label",:value="item.value")
         el-form-item
             el-button(type="primary",icon="el-icon-search",@click="onSubmit") 搜索
@@ -33,7 +33,7 @@ div.knowledge
             el-table-column(label="操作",width="280")
                 template(#default="scope")
                     el-link.el-icon-edit(:underline="false",href="javascript:;",@click="editHandle(scope.$index,scope.row)") 编辑
-                    el-link.el-icon-delete-solid(:underline="false",href="javascript:;",@click="deleteHandle(scope.$index)") 删除
+                    el-link.el-icon-delete-solid(:underline="false",href="javascript:;",@click="deleteHandle(scope.$index,scope.row)") 删除
         el-pagination(
             @size-change="handleSizeChange",
             @current-change="handleCurrentChange",
@@ -173,14 +173,15 @@ export default {
             },
             isEdit:false,
             editIndex:0,
+            editId:0,
         }
     },
     methods:{
         // 表单
         onSubmit(){
             this.tableData = []
-            for(let i=0; i<this.tableList.length;i++){
-                if(this.formInline.name || this.formInline.ques || this.formInline.ret){
+            if(this.formInline.name || this.formInline.ques || this.formInline.ret){
+                for(let i=0; i<this.tableList.length;i++){
                     let flag = true
                     // 值存在且不包含关键字
                     if(this.formInline.name && !this.tableList[i].name.includes(this.formInline.name)) flag = false 
@@ -190,7 +191,10 @@ export default {
                     if(this.formInline.ret!== '' && this.formInline.ret !== this.tableList[i].ret) flag = false 
                     if(flag) this.tableData.push(this.tableList[i])
                 }
-                
+            }else{  
+                for(let i in this.tableList){
+                    this.tableData.push(this.tableList[i])
+                }
             }
         },
         resetHandle(){
@@ -215,6 +219,7 @@ export default {
             this.isEdit = true
             this.editIndex = index
             this.dialogVisible = true
+            this.editId = row.id
             this.form = {
                 name:row.name,
                 code:row.code,
@@ -227,12 +232,16 @@ export default {
                 text:row.text
             }
         },
-        deleteHandle(index){
-            this.tableList.splice(index,1)
-            this.tableData = []
-            for(let i in this.tableList){
-                this.tableData.push(this.tableList[i])
+        deleteHandle(index,row){
+            for(let i = 0;i< this.tableList.length;i++){
+                if(this.tableList[i].id == row.id){
+                    this.tableList.splice(i,1)
+                    break
+                }
             }
+            this.tableData.splice(index,1) 
+            // 查询
+            this.onSubmit()
         },
         // dialog
         closeHandle(){
@@ -241,21 +250,27 @@ export default {
         submitHandle(){
             // 编辑
             if(this.isEdit){
-                this.tableList[this.editIndex] = {
-                    name:this.form.name,
-                    code:this.form.code,
-                    keyword:this.form.keyword,
-                    keywordCode:this.form.keywordCode,
-                    ques:this.form.ques,
-                    ret:this.form.ret,
-                    question:this.form.question,
-                    answer:this.form.answer,
-                    text:this.form.text
+                for(let i = 0;i< this.tableList.length;i++){
+                    if(this.tableList[i].id == this.editId){
+                        this.tableList[i] = {
+                            name:this.form.name,
+                            code:this.form.code,
+                            keyword:this.form.keyword,
+                            keywordCode:this.form.keywordCode,
+                            ques:this.form.ques,
+                            ret:this.form.ret,
+                            question:this.form.question,
+                            answer:this.form.answer,
+                            text:this.form.text
+                        }
+                        break
+                    }
                 }
             }
             // 新增
             if(!this.isEdit){
                 this.tableList.push({
+                    id:new Date().getTime(),
                     name:this.form.name,
                     code:this.form.code,
                     keyword:this.form.keyword,
@@ -267,10 +282,8 @@ export default {
                     text:this.form.text
                 })
             }
-            this.tableData = []
-            for(let i in this.tableList){
-                this.tableData.push(this.tableList[i])
-            }
+            // 查询
+            this.onSubmit()
             this.dialogVisible = false
         },
         // 分页
