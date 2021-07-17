@@ -58,7 +58,7 @@ export default {
             },
             {
               name:'知识库',
-              url:'/login'
+              url:'/knowledge'
             },
             {
               name:'字典管理',
@@ -71,6 +71,10 @@ export default {
             {
               name:'日志管理',
               url:'/log'
+            },
+            {
+              name:'登录',
+              url:'/login'
             }
           ]
         },
