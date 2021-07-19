@@ -49,7 +49,7 @@ el-dialog(:title="title",v-model="dialogVisible",width="30%",:center="false")
             el-radio(v-model="form.top",:label="1") 是
             el-radio(v-model="form.top",:label="2") 否
         el-form-item(label="备注")
-            QuillEditor(:options="editorOption",:v-model="form.content",ref="quill")
+            QuillEditor(:options="editorOption",ref="quill")
     template(#footer)
         div.dialog-footer
             el-button(@click="closeHandle") 关闭
@@ -90,18 +90,35 @@ export default {
             isEdit:false,
             editIndex:0,
             editorOption:{
-                debug: 'info',
+                // debug: 'info',
                 // modules: {
                 //     toolbar: '#toolbar'
                 // },
-                placeholder: 'Compose an epic...',
+                placeholder: '请输入内容',
                 // readOnly: true,
                 theme: 'snow'
             }
         }
     },
     methods:{
+
+
+        
         onSubmit(){
+            if(this.formInline.name || this.formInline.type){
+                for(let i=0; i<this.tableList.length;i++){
+                    let flag = true
+                    // 值存在且不包含关键字
+                    if(this.formInline.name && !this.tableList[i].name.includes(this.formInline.name)) flag = false 
+                    // 值存在且问题类型不相同
+                    if(this.formInline.type!== '' && this.formInline.type !== this.tableList[i].type) flag = false 
+                    if(flag) this.tableData.push(this.tableList[i])
+                }
+            }else{  
+                for(let i in this.tableList){
+                    this.tableData.push(this.tableList[i])
+                }
+            }
         },
         resetHandle(){
         },

@@ -72,6 +72,7 @@ export default {
               name:'日志管理',
               url:'/log'
             },
+             
             {
               name:'登录',
               url:'/login'
@@ -85,11 +86,23 @@ export default {
         },
         {
           name:'业务员管理',
-          icon:'el-icon-user-solid'
+          icon:'el-icon-user-solid',
+          list:[
+            {
+              name:'业务员管理',
+              url:'/salesman'
+            },
+          ]
         },
         {
           name:'协作单位',
-          icon:'el-icon-office-building'
+          icon:'el-icon-office-building',
+          list:[
+            {
+              name:'协作单位账号',
+              url:'/companyUser'
+            },
+          ]
         }
       ]
     }
